@@ -14,7 +14,7 @@
 
 void rw_rlock(atomic_t *lk)
 {
-	int num = 15;
+	int num = 100;
 	unsigned long tmp;
 
 	for (;;)
@@ -26,17 +26,17 @@ void rw_rlock(atomic_t *lk)
 
 		__asm__("pause");
 
-		if (num--)
+		if (num-- == 0)
 		{
 			usleep(10);
-			num = 15;
+			num = 100;
 		}
 	}
 }
 void rw_wlock(atomic_t *lk)
 {
 	unsigned long tmp;
-	int num = 15;
+	int num = 100;
 
 	for (;;)
 	{
@@ -47,10 +47,10 @@ void rw_wlock(atomic_t *lk)
 		}
 		__asm__("pause");
 
-		if (num--)
+		if (num-- == 0)
 		{
 			usleep(10);
-			num = 15;
+			num = 100;
 		}
 	}
 }
@@ -58,7 +58,7 @@ void rw_wlock(atomic_t *lk)
 void rw_unlock(atomic_t *lk)
 {
 	unsigned long tmp;
-	int num = 15;
+	int num = 100;
 	if (*lk == -1)
 	{
 		atomic_cmp_set(lk, -1 , 0);
@@ -74,10 +74,10 @@ void rw_unlock(atomic_t *lk)
 
 		__asm__("pause");
 
-		if (num--)
+		if (num-- == 0)
 		{
 			usleep(10);
-			num = 15;
+			num = 100;
 		}
 	}
 }
